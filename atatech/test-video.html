@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0a0a0f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        video {
+            width: 80%;
+            max-width: 800px;
+            height: auto;
+            border: 2px solid #00d4ff;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="color: #00d4ff; text-align: center; margin-bottom: 20px;">Video Test</h1>
+    <video id="test-video" controls muted>
+        <source src="/atatech/animasyon.mp4" type="video/mp4">
+        Tarayıcınız video oynatmayı desteklemiyor.
+    </video>
+    
+    <div style="color: #fff; text-align: center; margin-top: 20px;">
+        <p>Video yolu: /atatech/animasyon.mp4</p>
+        <p id="status">Yükleniyor...</p>
+    </div>
+    
+    <script>
+        const video = document.getElementById('test-video');
+        const status = document.getElementById('status');
+        
+        video.addEventListener('loadedmetadata', () => {
+            status.textContent = '✅ Video yüklendi! Süre: ' + video.duration + ' saniye';
+            status.style.color = '#10b981';
+        });
+        
+        video.addEventListener('error', (e) => {
+            status.textContent = '❌ Video hatası!';
+            status.style.color = '#ef4444';
+            console.error('Video hatası:', e);
+            console.error('Video src:', video.src);
+            console.error('Video currentSrc:', video.currentSrc);
+            if (video.error) {
+                console.error('Error code:', video.error.code);
+                console.error('Error message:', video.error.message);
+            }
+        });
+        
+        video.addEventListener('loadstart', () => {
+            status.textContent = '🔄 Video yüklenmeye başladı...';
+        });
+        
+        video.addEventListener('progress', () => {
+            if (video.buffered.length > 0) {
+                const loaded = (video.buffered.end(0) / video.duration) * 100;
+                status.textContent = '📥 Video yükleniyor: ' + loaded.toFixed(1) + '%';
+            }
+        });
+    </script>
+</body>
+</html>
